@@ -1,0 +1,104 @@
+\documentclass[a4paper,fleqn,12pt]{article}
+
+---LANG-PACKAGES---
+
+% Math packages
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% Set page geometry
+\usepackage[top=3cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+
+% Add images
+\usepackage{graphicx}
+
+% To improve floats positioning
+\def\fps@figure{htbp}
+\def\fps@table{htbp}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{4}
+\setcounter{totalnumber}{10}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.70}
+\renewcommand{\floatpagefraction}{0.66}
+
+\setcounter   {dbltopnumber}           {2}
+\renewcommand*{\dbltopfraction}        {1}
+\renewcommand*{\dblfloatpagefraction}{0.9}
+
+% To use colors
+\usepackage{xcolor}
+
+% Caption configuration options
+\usepackage[width=0.96\linewidth,justification=centerlast,labelfont=bf]{caption}
+
+% Force floats to be on the original section
+\usepackage[section]{placeins}
+
+% Sets line spacing
+\renewcommand{\baselinestretch}{1.1}
+
+% Controls section numbering
+\setcounter{tocdepth}{1}
+
+% Set figures path
+\graphicspath{{./figs/}}
+\makeatletter
+\def\input@path{{./figs/}}
+\makeatother
+
+\title {---TITLE---}
+\author{---AUTHOR---}
+\date  {---DATE---}
+
+\newcommand{\AddRasterFigure}[2]
+{
+  \begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.95\linewidth]{{#2}}
+    \caption{{#1}}
+  \end{figure}
+}
+
+\newcommand{\AddBoxedRasterFigure}[2]
+{
+  \begin{figure}[htb]
+    \centering
+    \fbox{\includegraphics[width=0.95\linewidth]{{#2}}}
+    \caption{{#1}}
+  \end{figure}
+}
+
+\newcommand{\AddTeXFigure}[2]
+{
+  \begin{figure}[htb]
+    \centering
+    \input{#2}
+    \caption{{#1}}
+  \end{figure}
+}
+
+\newcommand{\AddBoxedTeXFigure}[2]
+{
+  \begin{figure}[htb]
+    \centering
+    \fbox{\input{#2}}
+    \caption{{#1}}
+  \end{figure}
+}
+
+\begin{document}
+
+\maketitle
+
+---INTRO--- \texttt{---PROGRAM---}.
+
+\listoffigures
+
+\tableofcontents
+
+\end{document}

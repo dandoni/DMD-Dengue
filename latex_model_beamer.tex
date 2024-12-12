@@ -1,0 +1,91 @@
+\documentclass[fleqn,utf8,aspectratio=169,14pt]{beamer}
+
+---LANG-PACKAGES---
+
+% Math packages
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% Chosing beamer theme
+\usetheme{default}
+\usecolortheme{whale}
+
+% Removing visual pollution
+\setbeamertemplate{sidebar left}{}
+\beamertemplatenavigationsymbolsempty
+
+% Adding a Outline frame at each section
+\AtBeginSection{
+  \begin{frame}{\contentsname}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% Choosing a nice font
+\usepackage[libertine]{newtxmath}
+\usepackage{libertine}
+\usefonttheme{serif}
+
+% Sets line spacing
+\renewcommand{\baselinestretch}{1.1}
+
+% Controls section numbering
+\setcounter{tocdepth}{1}
+
+% Add page numbering
+\setbeamertemplate{footline}[frame number]
+
+% Set figures path
+\graphicspath{{./figs/}}
+\makeatletter
+\def\input@path{{./figs/}}
+\makeatother
+
+\title {---TITLE---}
+\author{---AUTHOR---}
+\date  {---DATE---\\[3mm] \scriptsize{---INTRO--- \texttt{---PROGRAM---}}}
+
+\newcommand{\AddRasterFigure}[2]
+{
+  \begin{frame}[c]{#1}
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{#2}
+  \end{frame}
+}
+
+\newcommand{\AddBoxedRasterFigure}[2]
+{
+  \begin{frame}[c]{#1}
+    \centering
+    \fbox{\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{#2}}
+  \end{frame}
+}
+
+\newcommand{\AddTeXFigure}[2]
+{
+  \begin{frame}{#1}
+    \null
+    \vspace*{-5mm}
+    \hspace*{-10mm}
+    \input{#2}
+  \end{frame}
+}
+
+\newcommand{\AddBoxedTeXFigure}[2]
+{
+  \begin{frame}{#1}
+    \null
+    \vspace*{-5mm}
+    \hspace*{-10mm}
+    \fbox{\input{#2}}
+  \end{frame}
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\end{document}
