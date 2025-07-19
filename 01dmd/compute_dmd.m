@@ -1,77 +1,69 @@
+clc, clear all
+#run '../../../startup'
+close all
+cd '../'
 
-function [ modes lambdas sigmas r ] = compute_dmd( X, pc )
+load dados_ordenados
 
-% Function to compute the DMD from data X
-%
-% usage: 
-%   [ modes lambdas sigmas r ] = compute_dmd( X, pc )
-%
-% X     - Data matrix
-% pc    - Percentage of singular values to preserve
-% 
-% modes   - Dynamic Modes
-% lambdas - Eigenvalues 
-% sigmas  - Singular values of X1
-% r       - Reduced rank
-%
+## Classe Cid para os dados relacionados a uma cidade s�
 
-  if( ~isvarname( 'pc' ) ); pc = 1; end
-  
-  % Normalization of dataset - This operation will be undone on the modes
-  %------------------------------------------------------------------------------%
-  
-  X_mean = mean(X(:));    X = X - X_mean;
-  X_max = max(abs(X(:))); X = X / X_max;
-  
-  %------------------------------------------------------------------------------%
-  
-  Ns = size( X, 2 );
-  
-  X1 = X( :, 1:end-1 );
-  X2 = X( :, 2:end   );
-  
-  % Decomposing X1, building A and At
-  %------------------------------------------------------------------------------%
-  
-  [ U S V ] = svd( X1, 'econ' );
-  
-  sigmas = diag(S);
-  r = length(sigmas);
-  
-  if( pc < 1 )
-  
-    ss = cumsum( sigmas );
-    ss = ss / ss(end);
-    
-    % Number of singular values to be preserved
-    r = max( 1, find( ss > pc, 1 ) );
-  
-    U = U( 1:end, 1:r );
-    S = S( 1:r,   1:r );
-    V = V( 1:end, 1:r );
-  
-  end
-  
-  InvS = diag( 1./diag(S) );
-  
-  A  = X2 * V * InvS * U';
-  
-  At = U' * X2 * V * InvS;
-  
-  % Computing eigenvalues and dynamic modes
-  %------------------------------------------------------------------------------%
-  
-  [ W L ] = eig( At );
-  
-  L = diag( L );
-  aa = abs( L );
-  
-  [ ll ii ] = sort( aa, 'descend' );
-  
-  lambdas = L(ii);
-  
-  modes = X2 * V * InvS * W(:,ii);
-  modes = ( modes * X_max ) + X_mean;
+cid.ind(1) = find ( cod == 313670 ); % Juiz de Fora
+cid.ind_o(1) = find (cod_o == 313670 );
+cid.ind_oc(1) = find ( cod_oc == 313670 );
 
-end
-%------------------------------------------------------------------------------%
+cid.ind(2) = find ( cod == 355030 ); % SP
+cid.ind_o(2) = find ( cod_o == 355030 );
+
+cid.ind(3) = find ( cod == 330455 ); % RJ
+cid.ind_o(3) = find ( cod_o == 330455 );
+
+cid.ind(4) = find ( cod == 310620 ); % BH
+cid.ind_o(4) = find ( cod_o == 310620 );
+
+cid.X = X(cid.ind,:);
+cid.X_o = X_o(cid.ind_o,:);
+cid.ordem = ["JF", "SP" , "RJ" , "BH" ];
+
+
+
+## Casos Totais Brasil
+
+brasil.X = sum(X,1);
+brasil.Xc = sum(X_c,1);
+
+
+## DMD
+
+
+Y = compute_complex_data(X);
+Y_c = compute_complex_data(X_c);
+Y_o = compute_complex_data(X_o);
+Y_oc = compute_complex_data(X_oc);
+
+
+[ modes lambdas sigmas ] = compute_dmd_r( Y_o,157);
+[ X_dmd b]  = compute_dmd_reconstruction_im_t2_ns( Y_o, modes, lambdas ,size(X,2));
+freq = imag(log(lambdas)*52/2/pi); % EM ANOS
+
+b= b';
+b = repmat( b , length(cod) , 1 );
+coef = b.*modes;
+fase = imag(log(coef));
+
+##  for ii =1 :n
+##tic
+##[ modes lambdas sigmas ] = compute_dmd_r( Y,157);
+##[ X_dmd ]  = compute_dmd_reconstruction_im_t( Y, modes, lambdas );
+##time(ii) = toc;
+##e = abs(real(X_dmd) - X);
+##erro_max(:,ii) = max(e,[],2);
+##erro_med(:,ii) = mean(e,2);
+##  end
+
+cd '99Plots'
+save 'dengue_proj.hdf5' '-hdf5'
+
+
+
+
+
